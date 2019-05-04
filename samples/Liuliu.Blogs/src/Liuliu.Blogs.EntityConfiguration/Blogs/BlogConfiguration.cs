@@ -19,8 +19,8 @@ namespace Liuliu.Blogs.EntityConfiguration.Blogs
         /// <param name="builder">实体类型创建器</param>
         public override void Configure(EntityTypeBuilder<Blog> builder)
         {
-            builder.HasIndex(m => new {m.Url, m.DeletedTime}).HasName("BlogUrlIndex").IsUnique();
-            builder.HasOne(m => m.User).WithOne().HasForeignKey<Blog>(m => m.UserId).IsRequired();
+            builder.HasIndex(m => new { m.Url, m.DeletedTime }).HasName("BlogUrlIndex").IsUnique();
+            builder.HasOne(m => m.User).WithOne().HasForeignKey<Blog>(m => m.UserId).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }

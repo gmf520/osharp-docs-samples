@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Liuliu.Blogs.Blogs.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OSharp.Entity;
 
@@ -18,8 +19,8 @@ namespace Liuliu.Blogs.EntityConfiguration.Blogs
         /// <param name="builder">实体类型创建器</param>
         public override void Configure(EntityTypeBuilder<Post> builder)
         {
-            builder.HasOne(m => m.Blog).WithMany().HasForeignKey(m => m.BlogId).IsRequired();
-            builder.HasOne(m => m.User).WithMany().HasForeignKey(m => m.UserId).IsRequired();
+            builder.HasOne(m => m.Blog).WithMany().HasForeignKey(m => m.BlogId).OnDelete(DeleteBehavior.Restrict).IsRequired();
+            builder.HasOne(m => m.User).WithMany().HasForeignKey(m => m.UserId).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }
