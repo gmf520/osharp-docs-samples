@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Liuliu.Blogs.Blogs.Entities;
 using OSharp.Entity;
+using OSharp.Mapping;
 
 namespace Liuliu.Blogs.Blogs.Dtos
 {
     /// <summary>
     /// 输出DTO：博客信息
     /// </summary>
+    [MapFrom(typeof(Blog))]
     public class BlogOutputDto : IOutputDto, IDataAuthEnabled
     {
         /// <summary>
