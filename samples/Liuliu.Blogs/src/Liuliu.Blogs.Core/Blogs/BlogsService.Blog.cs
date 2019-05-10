@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Liuliu.Blogs.Blogs.Dtos;
 using Liuliu.Blogs.Blogs.Entities;
+using Liuliu.Blogs.Blogs.Events;
 using Liuliu.Blogs.Identity.Entities;
 using OSharp.Data;
 using OSharp.Dependency;
@@ -89,11 +90,52 @@ namespace Liuliu.Blogs.Blogs
                 return new OperationResult(OperationResultType.QueryNull, $"编号为“{id}”的博客信息不存在");
             }
 
+            // 更新博客
             blog.IsEnabled = isEnabled;
             int count = await BlogRepository.UpdateAsync(blog);
-            return count > 0
+
+            User user = await UserRepository.GetAsync(blog.UserId);
+            if (user == null)
+            {
+                return new OperationResult(OperationResultType.QueryNull, $"编号为“{blog.UserId}”的用户信息不存在");
+            }
+
+            // 如果开通博客，给用户开通博主身份
+            if (isEnabled)
+            {
+                // 查找博客主的角色，博主角色名可由配置系统获得
+                const string roleName = "博主";
+                // 用于CUD操作的实体，要用 TrackQuery 方法来查询出需要的数据，不能用 Query，因为 Query 会使用 AsNoTracking
+                Role role = RoleRepository.TrackQuery(m => m.Name == roleName).FirstOrDefault();
+                if (role == null)
+                {
+                    return new OperationResult(OperationResultType.QueryNull, $"名称为“{roleName}”的角色信息不存在");
+                }
+
+                UserRole userRole = UserRoleRepository.TrackQuery(m => m.UserId == user.Id && m.RoleId == role.Id)
+                    .FirstOrDefault();
+                if (userRole == null)
+                {
+                    userRole = new UserRole() { UserId = user.Id, RoleId = role.Id, IsLocked = false };
+                    count += await UserRoleRepository.InsertAsync(userRole);
+                }
+            }
+
+            OperationResult result = count > 0
                 ? new OperationResult(OperationResultType.Success, $"博客“{blog.Display}”审核 {(isEnabled ? "通过" : "未通过")}")
                 : OperationResult.NoChanged;
+            if (result.Succeeded)
+            {
+                VerifyBlogEventData eventData = new VerifyBlogEventData()
+                {
+                    BlogName = blog.Display,
+                    UserName = user.NickName,
+                    IsEnabled = isEnabled
+                };
+                EventBus.Publish(eventData);
+            }
+
+            return result;
         }
 
         /// <summary>
