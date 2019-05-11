@@ -24,5 +24,10 @@ namespace Liuliu.Blogs.Blogs.Events
         /// 获取或设置 审核是否通过
         /// </summary>
         public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// 获取或设置 审核理由
+        /// </summary>
+        public string Reason { get; set; }
     }
 }

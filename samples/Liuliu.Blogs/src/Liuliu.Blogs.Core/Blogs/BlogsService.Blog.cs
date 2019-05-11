@@ -79,19 +79,20 @@ namespace Liuliu.Blogs.Blogs
         /// <summary>
         /// 审核博客信息
         /// </summary>
-        /// <param name="id">博客编号</param>
-        /// <param name="isEnabled">是否通过</param>
+        /// <param name="dto">审核博客信息DTO信息</param>
         /// <returns>业务操作结果</returns>
-        public virtual async Task<OperationResult> VerifyBlog(int id, bool isEnabled)
+        public virtual async Task<OperationResult> VerifyBlog(BlogVerifyDto dto)
         {
-            Blog blog = await BlogRepository.GetAsync(id);
+            Check.Validate(dto, nameof(dto));
+            
+            Blog blog = await BlogRepository.GetAsync(dto.Id);
             if (blog == null)
             {
-                return new OperationResult(OperationResultType.QueryNull, $"编号为“{id}”的博客信息不存在");
+                return new OperationResult(OperationResultType.QueryNull, $"编号为“{dto.Id}”的博客信息不存在");
             }
 
             // 更新博客
-            blog.IsEnabled = isEnabled;
+            blog.IsEnabled = dto.IsEnabled;
             int count = await BlogRepository.UpdateAsync(blog);
 
             User user = await UserRepository.GetAsync(blog.UserId);
@@ -101,7 +102,7 @@ namespace Liuliu.Blogs.Blogs
             }
 
             // 如果开通博客，给用户开通博主身份
-            if (isEnabled)
+            if (dto.IsEnabled)
             {
                 // 查找博客主的角色，博主角色名可由配置系统获得
                 const string roleName = "博主";
@@ -122,7 +123,7 @@ namespace Liuliu.Blogs.Blogs
             }
 
             OperationResult result = count > 0
-                ? new OperationResult(OperationResultType.Success, $"博客“{blog.Display}”审核 {(isEnabled ? "通过" : "未通过")}")
+                ? new OperationResult(OperationResultType.Success, $"博客“{blog.Display}”审核 {(dto.IsEnabled ? "通过" : "未通过")}，审核理由：{dto.Reason}")
                 : OperationResult.NoChanged;
             if (result.Succeeded)
             {
@@ -130,7 +131,8 @@ namespace Liuliu.Blogs.Blogs
                 {
                     BlogName = blog.Display,
                     UserName = user.NickName,
-                    IsEnabled = isEnabled
+                    IsEnabled = blog.IsEnabled,
+                    Reason = dto.Reason
                 };
                 EventBus.Publish(eventData);
             }
@@ -145,6 +147,8 @@ namespace Liuliu.Blogs.Blogs
         /// <returns>业务操作结果</returns>
         public virtual Task<OperationResult> UpdateBlogs(params BlogInputDto[] dtos)
         {
+            Check.Validate<BlogInputDto, int>(dtos, nameof(dtos) );
+            
             return BlogRepository.UpdateAsync(dtos, async (dto, entity) =>
             {
                 if (await BlogRepository.CheckExistsAsync(m => m.Url == dto.Url, dto.Id))
@@ -161,6 +165,8 @@ namespace Liuliu.Blogs.Blogs
         /// <returns>业务操作结果</returns>
         public virtual Task<OperationResult> DeleteBlogs(params int[] ids)
         {
+            Check.NotNull(ids, nameof(ids));
+            
             return BlogRepository.DeleteAsync(ids, entity =>
             {
                 if (PostRepository.Query(m => m.BlogId == entity.Id).Any())

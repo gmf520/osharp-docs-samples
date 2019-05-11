@@ -27,7 +27,7 @@ namespace Liuliu.Blogs.Blogs.Events
         public override void Handle(VerifyBlogEventData eventData)
         {
             _logger.LogInformation(
-                $"触发 审核博客事件处理器，用户“{eventData.UserName}”的博客“{eventData.BlogName}”审核结果：{(eventData.IsEnabled ? "通过" : "未通过")}");
+                $"触发 审核博客事件处理器，用户“{eventData.UserName}”的博客“{eventData.BlogName}”审核结果：{(eventData.IsEnabled ? "通过" : "未通过")}，审核理由：{eventData.Reason}");
         }
     }
 }
