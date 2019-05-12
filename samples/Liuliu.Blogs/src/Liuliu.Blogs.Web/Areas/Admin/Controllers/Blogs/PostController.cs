@@ -24,7 +24,7 @@ namespace Liuliu.Blogs.Web.Areas.Admin.Controllers.Blogs
         /// <summary>
         /// 初始化一个<see cref="PostController"/>类型的新实例
         /// </summary>
-        protected PostController(IBlogsContract blogsContract,
+        public PostController(IBlogsContract blogsContract,
             IFilterService filterService)
         {
             BlogsContract = blogsContract;

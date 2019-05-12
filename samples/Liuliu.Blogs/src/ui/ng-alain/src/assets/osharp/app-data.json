@@ -20,7 +20,21 @@
     "i18n": "menu.nav.business",
     "group": true,
     "hideInBreadcrumb": true,
-    "children": []
+    "children": [{
+      "text": "博客模块",
+      "group": "true",
+      "icon": "anticon-border",
+      "acl": "Root.Admin.Blogs",
+      "children": [{
+        "text": "博客管理",
+        "link": "/blogs/blog",
+        "acl": "Root.Admin.Blogs.Blog"
+      }, {
+        "text": "文章管理",
+        "link": "/blogs/post",
+        "acl": "Root.Admin.Blogs.Post"
+      }]
+    }]
   }, {
     "text": "权限模块",
     "i18n": "menu.nav.permission",

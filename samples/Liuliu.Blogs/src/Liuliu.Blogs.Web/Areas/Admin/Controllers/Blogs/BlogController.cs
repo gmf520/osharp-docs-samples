@@ -115,22 +115,5 @@ namespace Liuliu.Blogs.Web.Areas.Admin.Controllers.Blogs
             OperationResult result = await BlogsContract.UpdateBlogs(dtos);
             return result.ToAjaxResult();
         }
-
-        /// <summary>
-        /// 删除博客信息
-        /// </summary>
-        /// <param name="ids">博客信息编号</param>
-        /// <returns>JSON操作结果</returns>
-        [HttpPost]
-        [ModuleInfo]
-        [DependOnFunction("Read")]
-        [ServiceFilter(typeof(UnitOfWorkAttribute))]
-        [Description("删除")]
-        public async Task<AjaxResult> Delete(int[] ids)
-        {
-            Check.NotNull(ids, nameof(ids));
-            OperationResult result = await BlogsContract.DeleteBlogs(ids);
-            return result.ToAjaxResult();
-        }
     }
 }

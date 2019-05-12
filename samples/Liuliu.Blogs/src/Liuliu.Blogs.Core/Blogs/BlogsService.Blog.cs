@@ -122,9 +122,8 @@ namespace Liuliu.Blogs.Blogs
                 }
             }
 
-            OperationResult result = count > 0
-                ? new OperationResult(OperationResultType.Success, $"博客“{blog.Display}”审核 {(dto.IsEnabled ? "通过" : "未通过")}，审核理由：{dto.Reason}")
-                : OperationResult.NoChanged;
+            OperationResult result = new OperationResult(OperationResultType.Success,
+                $"博客“{blog.Display}”审核 {(dto.IsEnabled ? "通过" : "未通过")}，审核理由：{dto.Reason}");
             if (result.Succeeded)
             {
                 VerifyBlogEventData eventData = new VerifyBlogEventData()
@@ -155,25 +154,6 @@ namespace Liuliu.Blogs.Blogs
                 {
                     throw new OsharpException($"Url为“{dto.Url}”的博客已存在，不能重复");
                 }
-            });
-        }
-
-        /// <summary>
-        /// 删除博客信息
-        /// </summary>
-        /// <param name="ids">要删除的博客信息编号</param>
-        /// <returns>业务操作结果</returns>
-        public virtual Task<OperationResult> DeleteBlogs(params int[] ids)
-        {
-            Check.NotNull(ids, nameof(ids));
-            
-            return BlogRepository.DeleteAsync(ids, entity =>
-            {
-                if (PostRepository.Query(m => m.BlogId == entity.Id).Any())
-                {
-                    throw new OsharpException($"博客“{entity.Display}”中还有文章未删除，请先删除所有文章，再删除博客");
-                }
-                return Task.FromResult(0);
             });
         }
     }

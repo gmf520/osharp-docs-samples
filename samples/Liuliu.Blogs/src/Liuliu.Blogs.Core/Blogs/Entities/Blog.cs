@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Liuliu.Blogs.Identity.Entities;
@@ -10,7 +11,8 @@ namespace Liuliu.Blogs.Blogs.Entities
     /// <summary>
     /// 实体类：博客信息
     /// </summary>
-    public class Blog : EntityBase<int>, ICreatedTime, ISoftDeletable
+    [Description("博客信息")]
+    public class Blog : EntityBase<int>, ICreatedTime
     {
         /// <summary>
         /// 获取或设置 博客地址
@@ -33,11 +35,6 @@ namespace Liuliu.Blogs.Blogs.Entities
         /// 获取或设置 创建时间
         /// </summary>
         public DateTime CreatedTime { get; set; }
-
-        /// <summary>
-        /// 获取或设置 数据逻辑删除时间，为null表示正常数据，有值表示已逻辑删除，同时删除时间每次不同也能保证索引唯一性
-        /// </summary>
-        public DateTime? DeletedTime { get; set; }
 
         /// <summary>
         /// 获取或设置 作者编号

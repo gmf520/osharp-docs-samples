@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Liuliu.Blogs.Identity.Entities;
@@ -10,7 +11,8 @@ namespace Liuliu.Blogs.Blogs.Entities
     /// <summary>
     /// 实体类：文章信息
     /// </summary>
-    public class Post:EntityBase<int>,ICreatedTime,ISoftDeletable
+    [Description("文章信息")]
+    public class Post : EntityBase<int>, ICreatedTime, ISoftDeletable
     {
         /// <summary>
         /// 获取或设置 文章标题

@@ -27,6 +27,7 @@ const routes: Routes = [
       { path: 'identity', loadChildren: './identity/identity.module#IdentityModule', canActivateChild: [ACLGuard], data: { guard: 'Root.Admin.Identity' } },
       { path: 'security', loadChildren: './security/security.module#SecurityModule', canActivateChild: [ACLGuard], data: { guard: 'Root.Admin.Security' } },
       { path: 'systems', loadChildren: './systems/systems.module#SystemsModule', canActivateChild: [ACLGuard], data: { guard: 'Root.Admin.Systems' } },
+      { path: 'blogs', loadChildren: './blogs/blogs.module#BlogsModule', canActivateChild: [ACLGuard], data: { guard: 'Root.Admin.Blogs' } },
     ]
   },
   // 全屏布局

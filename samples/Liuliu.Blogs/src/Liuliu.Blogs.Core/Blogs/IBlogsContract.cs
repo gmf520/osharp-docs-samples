@@ -51,13 +51,6 @@ namespace Liuliu.Blogs.Blogs
         /// <returns>业务操作结果</returns>
         Task<OperationResult> UpdateBlogs(params BlogInputDto[] dtos);
 
-        /// <summary>
-        /// 删除博客信息
-        /// </summary>
-        /// <param name="ids">要删除的博客信息编号</param>
-        /// <returns>业务操作结果</returns>
-        Task<OperationResult> DeleteBlogs(params int[] ids);
-
         #endregion
 
         #region 文章信息业务

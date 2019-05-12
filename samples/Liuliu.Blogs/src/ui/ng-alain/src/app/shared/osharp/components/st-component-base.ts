@@ -1,9 +1,9 @@
 import { PageRequest, PageCondition, SortCondition, ListSortDirection, AjaxResult, } from '../osharp.model';
 import { STColumn, STReq, STRes, STComponent, STChange, STPage, STRequestOptions, STData, STError, } from '@delon/abc';
 import { ViewChild, Injector } from '@angular/core';
-import { SFSchema, SFUISchema, SFSchemaEnumType } from '@delon/form';
+import { SFSchema, SFUISchema, SFSchemaEnumType, SFComponent } from '@delon/form';
 import { _HttpClient } from '@delon/theme';
-import { NzModalComponent, NzTreeNodeOptions, NzTreeNode } from 'ng-zorro-antd';
+import { NzModalComponent } from 'ng-zorro-antd';
 import { OsharpService } from '../services/osharp.service';
 import { AlainService } from '../services/ng-alain.service';
 import { OsharpSTColumn } from '../services/ng-alain.types';
@@ -23,6 +23,7 @@ export abstract class STComponentBase {
   req: STReq;
   res: STRes;
   page: STPage;
+  data: STData[] = [];
   @ViewChild('st') st: STComponent;
 
   // 编辑属性
@@ -126,6 +127,7 @@ export abstract class STComponentBase {
   }
 
   protected ResponseDataProcess(data: STData[]): STData[] {
+    this.data = data;
     return data;
   }
 
@@ -134,9 +136,7 @@ export abstract class STComponentBase {
   }
 
   search(request: PageRequest) {
-    if (!request) {
-      return;
-    }
+    if (!request) return;
     this.req.body = request;
     this.st.reload();
   }
@@ -180,7 +180,9 @@ export abstract class STComponentBase {
   }
 
   protected GetSFUISchema(): SFUISchema {
-    let ui: SFUISchema = {};
+    let ui: SFUISchema = {
+      '*': { spanLabelFixed: 100, grid: { span: 12 } }
+    };
     return ui;
   }
 
@@ -201,9 +203,7 @@ export abstract class STComponentBase {
   }
 
   edit(row: STData) {
-    if (!row || !this.editModal) {
-      return;
-    }
+    if (!row || !this.editModal) return;
     this.schema = this.GetSFSchema();
     this.ui = this.GetSFUISchema();
     this.editRow = row;
@@ -213,7 +213,6 @@ export abstract class STComponentBase {
 
   close() {
     if (!this.editModal) return;
-    console.log(this.editModal);
     this.editModal.destroy();
   }
 
@@ -228,9 +227,7 @@ export abstract class STComponentBase {
   }
 
   delete(value: STData) {
-    if (!value) {
-      return;
-    }
+    if (!value) return;
     this.http.post<AjaxResult>(this.deleteUrl, [value.Id]).subscribe(result => {
       this.osharp.ajaxResult(result, () => {
         this.st.reload();
