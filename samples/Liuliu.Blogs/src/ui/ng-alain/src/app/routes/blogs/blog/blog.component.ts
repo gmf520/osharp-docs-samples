@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { SFUISchema, SFSchema } from '@delon/form';
+import { SFUISchema } from '@delon/form';
 import { OsharpSTColumn } from '@shared/osharp/services/ng-alain.types';
 import { STComponentBase, } from '@shared/osharp/components/st-component-base';
 import { STData } from '@delon/abc';

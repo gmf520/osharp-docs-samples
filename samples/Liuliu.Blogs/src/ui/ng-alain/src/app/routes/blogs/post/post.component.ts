@@ -1,15 +1,3 @@
-// ------------------------------------------------------------------------------
-//  <once-generated>
-//     这个文件只生成一次，再次生成不会被覆盖。
-//  </once-generated>
-//
-//  <copyright file="post.module.ts" company="柳柳软件">
-//
-//  </copyright>
-//  <site></site>
-//  <last-editor></last-editor>
-// -----------------------------------------------------------------------
-
 import { Component, OnInit, Injector } from '@angular/core';
 import { SFUISchema } from '@delon/form';
 import { OsharpSTColumn } from '@shared/osharp/services/ng-alain.types';
